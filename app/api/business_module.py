@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Body, Query, Path, Form, File, UploadFile
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any, Optional
 import json
@@ -42,6 +42,28 @@ class WorkingHoursModel(BaseModel):
     open_time: str
     close_time: str
     is_working: bool = True
+
+# Маршрут для страницы авторизации (входа)
+@router.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request):
+    """
+    Отображение страницы входа
+    """
+    return templates.TemplateResponse(
+        "login.html",
+        {"request": request, "title": "Вход в аккаунт"}
+    )
+
+# Маршрут для страницы регистрации пользователя
+@router.get("/signup", response_class=HTMLResponse)
+async def signup_page(request: Request):
+    """
+    Отображение страницы регистрации пользователя
+    """
+    return templates.TemplateResponse(
+        "signup.html",
+        {"request": request, "title": "Регистрация аккаунта"}
+    )
 
 # Маршрут для страницы регистрации бизнеса
 @router.get("/register", response_class=HTMLResponse)

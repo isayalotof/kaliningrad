@@ -36,7 +36,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 # Подключение маршрутов API
-app.include_router(business_module.router)
+app.include_router(business_module.router, prefix="/business")
 app.include_router(auth.router)
 app.include_router(map.router)
 app.include_router(company.router)
@@ -45,13 +45,7 @@ app.include_router(company.router)
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "title": "Qwerty.town - Бизнес-платформа"})
 
-@app.get("/login")
-async def login_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request, "title": "Вход в аккаунт"})
-
-@app.get("/signup")
-async def signup_page(request: Request):
-    return templates.TemplateResponse("signup.html", {"request": request, "title": "Регистрация аккаунта"})
+# Маршруты для страниц логина и регистрации перенесены в business_module.py с префиксом /business
 
 @app.get("/business/module")
 async def business_module_page(request: Request):

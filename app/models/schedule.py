@@ -77,39 +77,5 @@ class BookingStatus(str, enum.Enum):
     CANCELLED = "cancelled"     # Отменено
     RESCHEDULED = "rescheduled" # Перенесено
 
-
-class Booking(Base):
-    """Модель бронирования услуги"""
-    __tablename__ = "bookings"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    service_id = Column(Integer, ForeignKey("services.id"), nullable=False)
-    client_id = Column(Integer, ForeignKey("clients.id"), nullable=False)
-    
-    # Время начала и окончания
-    start_time = Column(DateTime, nullable=False, index=True)
-    end_time = Column(DateTime, nullable=False, index=True)
-    
-    # Статус бронирования
-    status = Column(Enum(BookingStatus), default=BookingStatus.PENDING)
-    
-    # Комментарий к бронированию
-    comment = Column(Text, nullable=True)
-    
-    # Информация о предоплате
-    prepayment_amount = Column(Float, nullable=True)
-    prepayment_status = Column(String(50), nullable=True)
-    
-    # Дополнительная информация
-    additional_info = Column(JSON, nullable=True)
-    
-    # Время создания/обновления
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Связи с другими таблицами
-    service = relationship("Service", back_populates="bookings")
-    client = relationship("Client", back_populates="bookings")
-    
-    def __repr__(self):
-        return f"<Booking {self.id} for {self.service.name}>" 
+# Класс Booking перенесен в отдельный файл app/models/booking.py
+# Это предотвращает конфликт с другим определением класса Booking 

@@ -5,6 +5,7 @@ from app.core.database import Base
 from typing import List, Optional
 from sqlalchemy.sql import func
 import json
+from app.models.schedule import Schedule
 
 # Класс Location из company.py следует перенести сюда
 class Location(Base):
