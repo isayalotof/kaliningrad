@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ company.name }} - Qwerty.town</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/business-profile.css') }}">
+</head>
+<body>
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="fs-3 m-0">
+                        <img src="{{ url_for('static', path='/img/logo.png') }}" alt="Qwerty.town" height="40" class="me-2">
+                        <a href="/" class="text-white text-decoration-none">Qwerty.town</a>
+                    </h1>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="/business/dashboard" class="btn btn-sm btn-light" data-bs-toggle="tooltip" title="Личный кабинет">
+                        <i class="bi bi-speedometer2 me-1"></i> Личный кабинет
+                    </a>
+                    <a href="/business/profile/edit" class="btn btn-sm btn-light" data-bs-toggle="tooltip" title="Редактировать профиль">
+                        <i class="bi bi-pencil-square me-1"></i> Редактировать
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-4">
+        <!-- Основное фото и название компании -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="profile-cover-container">
+                {% if company.main_photo %}
+                <img src="{{ company.main_photo }}" alt="{{ company.name }}" class="profile-cover">
+                {% else %}
+                <div class="profile-cover bg-light"></div>
+                {% endif %}
+                <div class="profile-cover-overlay"></div>
+            </div>
+            <div class="card-body position-relative">
+                <div class="position-absolute profile-logo-container">
+                    {% if company.logo %}
+                    <img src="{{ company.logo }}" alt="{{ company.name }}" class="profile-logo shadow">
+                    {% else %}
+                    <div class="profile-logo bg-light shadow d-flex align-items-center justify-content-center">
+                        <i class="bi bi-building text-muted display-3"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8 ps-md-5 ps-lg-6 mt-5 mt-md-2">
+                        <div class="d-flex align-items-center mb-2">
+                            <h1 class="mb-0">{{ company.name }}</h1>
+                            <span class="badge bg-success ms-2">Проверено</span>
+                        </div>
+                        <p class="text-muted mb-2">
+                            {% set business_types = {
+                                'restaurant': 'Ресторан/Кафе', 
+                                'beauty': 'Салон красоты', 
+                                'health': 'Медицинский центр', 
+                                'sport': 'Спортивный клуб', 
+                                'education': 'Образовательный центр', 
+                                'other': 'Другое'
+                            } %}
+                            {{ business_types[company.business_type] }}
+                        </p>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <span class="text-warning">
+                                    {% for i in range(5) %}
+                                        {% if i < (company.rating|default(0)|int) %}
+                                            <i class="bi bi-star-fill"></i>
+                                        {% elif i < company.rating|default(0) and i >= (company.rating|default(0)|int) %}
+                                            <i class="bi bi-star-half"></i>
+                                        {% else %}
+                                            <i class="bi bi-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </span>
+                                <span class="ms-1">{{ company.rating|default(0) }}</span>
+                            </div>
+                            <div>
+                                <span class="text-muted">{{ company.reviews_count|default(0) }} отзывов</span>
+                            </div>
+                        </div>
+                        <p>{{ company.description }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Контактная информация</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <div class="d-flex">
+                                            <div class="me-2 text-primary">
+                                                <i class="bi bi-telephone-fill"></i>
+                                            </div>
+                                            <div>
+                                                <a href="tel:{{ company.phone }}" class="text-decoration-none">{{ company.phone }}</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="mb-2">
+                                        <div class="d-flex">
+                                            <div class="me-2 text-primary">
+                                                <i class="bi bi-envelope-fill"></i>
+                                            </div>
+                                            <div>
+                                                <a href="mailto:{{ company.email }}" class="text-decoration-none">{{ company.email }}</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% if company.website %}
+                                    <li class="mb-2">
+                                        <div class="d-flex">
+                                            <div class="me-2 text-primary">
+                                                <i class="bi bi-globe"></i>
+                                            </div>
+                                            <div>
+                                                <a href="{{ company.website }}" target="_blank" class="text-decoration-none">{{ company.website }}</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                                
+                                <h5 class="card-title mb-3 mt-4">Социальные сети</h5>
+                                <div class="d-flex">
+                                    {% if company.social_networks.vk %}
+                                    <a href="{{ company.social_networks.vk }}" target="_blank" class="btn btn-outline-primary me-2" title="ВКонтакте">
+                                        <i class="bi bi-vk"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if company.social_networks.telegram %}
+                                    <a href="https://t.me/{{ company.social_networks.telegram }}" target="_blank" class="btn btn-outline-primary me-2" title="Telegram">
+                                        <i class="bi bi-telegram"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if company.social_networks.whatsapp %}
+                                    <a href="https://wa.me/{{ company.social_networks.whatsapp }}" target="_blank" class="btn btn-outline-primary me-2" title="WhatsApp">
+                                        <i class="bi bi-whatsapp"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if company.social_networks.youtube %}
+                                    <a href="{{ company.social_networks.youtube }}" target="_blank" class="btn btn-outline-primary me-2" title="YouTube">
+                                        <i class="bi bi-youtube"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Действия</h5>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal">
+                                        <i class="bi bi-calendar-check me-1"></i> Забронировать
+                                    </button>
+                                    <button class="btn btn-outline-secondary">
+                                        <i class="bi bi-chat-left-text me-1"></i> Написать сообщение
+                                    </button>
+                                    <button class="btn btn-outline-secondary share-btn">
+                                        <i class="bi bi-share me-1"></i> Поделиться
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Галерея -->
+                {% if company.gallery and company.gallery|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Галерея</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            {% for image in company.gallery %}
+                            <div class="col-md-4 col-6">
+                                <a href="{{ image }}" class="gallery-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-image="{{ image }}">
+                                    <img src="{{ image }}" alt="Фото {{ loop.index }}" class="img-fluid rounded">
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- О нас -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">О нас</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ company.description }}</p>
+                        
+                        <h6 class="mt-4">Местоположение</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <address class="mb-0">
+                                    г. {{ company.location.city }},<br>
+                                    ул. {{ company.location.street }}, {{ company.location.building }}
+                                    {% if company.location.floor or company.location.office %}
+                                        <br>
+                                        {% if company.location.floor %}Этаж {{ company.location.floor }}{% endif %}
+                                        {% if company.location.floor and company.location.office %}, {% endif %}
+                                        {% if company.location.office %}Офис {{ company.location.office }}{% endif %}
+                                    {% endif %}
+                                </address>
+                                {% if company.location.additional_info %}
+                                <p class="mt-2"><small>{{ company.location.additional_info }}</small></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="map-placeholder bg-light rounded d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <span class="text-muted">Карта загружается...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Услуги -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Услуги</h5>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#bookingModal">Забронировать</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Название</th>
+                                        <th>Длительность</th>
+                                        <th>Цена</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if company.services %}
+                                        {% for service in company.services %}
+                                        <tr>
+                                            <td>{{ service.name }}</td>
+                                            <td>{{ service.duration }} мин.</td>
+                                            <td>{{ service.price }} ₽</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-primary book-service-btn" data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">
+                                                    Выбрать
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="4" class="text-center">Нет доступных услуг</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Отзывы -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Отзывы</h5>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">Оставить отзыв</button>
+                    </div>
+                    <div class="card-body">
+                        {% if company.reviews %}
+                            {% for review in company.reviews %}
+                            <div class="d-flex mb-4 pb-4 {% if not loop.last %}border-bottom{% endif %}">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                        <i class="bi bi-person text-primary"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3 flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <h6 class="mb-0">{{ review.user_name }}</h6>
+                                        <small class="text-muted">{{ review.date }}</small>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="text-warning">
+                                            {% for i in range(5) %}
+                                                {% if i < review.rating %}
+                                                    <i class="bi bi-star-fill"></i>
+                                                {% else %}
+                                                    <i class="bi bi-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                    </div>
+                                    <p class="mb-0">{{ review.text }}</p>
+                                    
+                                    {% if review.reply %}
+                                    <div class="bg-light p-3 rounded mt-3">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0">
+                                                <div class="company-avatar bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                                                    <i class="bi bi-building text-primary small"></i>
+                                                </div>
+                                            </div>
+                                            <div class="ms-2 flex-grow-1">
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <small class="fw-bold">{{ company.name }}</small>
+                                                    <small class="text-muted">{{ review.reply_date }}</small>
+                                                </div>
+                                                <small>{{ review.reply }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-center text-muted">Отзывов пока нет. Будьте первым, кто оставит отзыв!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <!-- Время работы -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Время работы</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {% set days = {
+                                'monday': 'Понедельник',
+                                'tuesday': 'Вторник',
+                                'wednesday': 'Среда',
+                                'thursday': 'Четверг',
+                                'friday': 'Пятница',
+                                'saturday': 'Суббота',
+                                'sunday': 'Воскресенье'
+                            } %}
+                            
+                            {% set today = now.strftime('%A')|lower %}
+                            
+                            {% for day_key, day_name in days.items() %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center {% if day_key == today %}bg-light{% endif %}">
+                                <div>
+                                    <span {% if day_key == today %}class="fw-bold"{% endif %}>{{ day_name }}</span>
+                                    {% if day_key == today %}<span class="badge bg-primary ms-2">Сегодня</span>{% endif %}
+                                </div>
+                                <div>
+                                    {% if company.working_hours and day_key in company.working_hours and company.working_hours[day_key].is_working_day %}
+                                        {{ company.working_hours[day_key].open_time }} - {{ company.working_hours[day_key].close_time }}
+                                    {% else %}
+                                        <span class="text-muted">Выходной</span>
+                                    {% endif %}
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Рекомендуемые компании -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Похожие компании</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if similar_companies %}
+                            {% for similar in similar_companies %}
+                            <div class="d-flex mb-3 {% if not loop.last %}pb-3 border-bottom{% endif %}">
+                                <div class="flex-shrink-0">
+                                    {% if similar.logo %}
+                                    <img src="{{ similar.logo }}" alt="{{ similar.name }}" class="rounded" width="50" height="50">
+                                    {% else %}
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                        <i class="bi bi-building text-muted"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="mb-1">
+                                        <a href="/business/profile/{{ similar.id }}" class="text-decoration-none">{{ similar.name }}</a>
+                                    </h6>
+                                    <div class="text-warning small">
+                                        {% for i in range(5) %}
+                                            {% if i < (similar.rating|default(0)|int) %}
+                                                <i class="bi bi-star-fill"></i>
+                                            {% elif i < similar.rating|default(0) and i >= (similar.rating|default(0)|int) %}
+                                                <i class="bi bi-star-half"></i>
+                                            {% else %}
+                                                <i class="bi bi-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <span class="text-muted ms-1">{{ similar.rating|default(0) }}</span>
+                                    </div>
+                                    <small class="text-muted">{{ similar.location.city }}</small>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-center text-muted">Нет похожих компаний</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно для галереи -->
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Галерея</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" id="galleryModalImage" class="img-fluid" alt="Галерея">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для бронирования -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Бронирование</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        <div class="mb-3">
+                            <label for="service" class="form-label">Услуга</label>
+                            <select class="form-select" id="service" required>
+                                <option value="">Выберите услугу</option>
+                                {% if company.services %}
+                                    {% for service in company.services %}
+                                    <option value="{{ service.id }}">{{ service.name }} ({{ service.price }} ₽)</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="booking-date" class="form-label">Дата</label>
+                            <input type="date" class="form-control" id="booking-date" min="{{ now.strftime('%Y-%m-%d') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="booking-time" class="form-label">Время</label>
+                            <select class="form-select" id="booking-time" required disabled>
+                                <option value="">Сначала выберите дату</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="booking-name" class="form-label">Ваше имя</label>
+                            <input type="text" class="form-control" id="booking-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="booking-phone" class="form-label">Телефон</label>
+                            <input type="tel" class="form-control" id="booking-phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="booking-comment" class="form-label">Комментарий</label>
+                            <textarea class="form-control" id="booking-comment" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" id="confirmBooking">Забронировать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для отзыва -->
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Оставить отзыв</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reviewForm">
+                        <div class="mb-3">
+                            <label class="form-label">Оценка</label>
+                            <div class="rating-input">
+                                {% for i in range(5, 0, -1) %}
+                                <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" required>
+                                <label for="star{{ i }}"><i class="bi bi-star-fill"></i></label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="review-name" class="form-label">Ваше имя</label>
+                            <input type="text" class="form-control" id="review-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="review-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="review-email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="review-text" class="form-label">Отзыв</label>
+                            <textarea class="form-control" id="review-text" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" id="submitReview">Отправить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-3 mt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="m-0">&copy; <span class="current-year">2023</span> Qwerty.town. Все права защищены.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-white me-3">Пользовательское соглашение</a>
+                    <a href="#" class="text-white">Политика конфиденциальности</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', path='/js/main.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/business-profile.js') }}"></script>
+</body>
+</html> 

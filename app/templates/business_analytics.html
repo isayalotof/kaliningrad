@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Аналитика - Qwerty.town</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/business-module.css') }}">
+</head>
+<body>
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="fs-3 m-0">
+                        
+                        Qwerty.town
+                    </h1>
+                    <p class="m-0">Аналитика для вашего бизнеса</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="btn btn-sm btn-light">Профиль</a>
+                    <a href="#" class="btn btn-sm btn-light">Настройки</a>
+                    <a href="#" class="btn btn-sm btn-outline-light">
+                        <i class="bi bi-telegram"></i> Открыть в Telegram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container-fluid p-0">
+        <div class="situation-center" id="analytics-dashboard">
+            <!-- Ситуационный центр с тремя панелями -->
+            <div class="scene-container" id="scene">
+                <!-- Основной контент (графики, медиа) -->
+                <div id="scene-content" class="p-4">
+                    <!-- Заголовок и элементы управления -->
+                    <div class="d-flex justify-content-between mb-4">
+                        <h2 class="mb-0">Аналитика и статистика</h2>
+                        <div class="d-flex">
+                            <select class="form-select me-2" id="date-range-picker">
+                                <option value="7d">Последние 7 дней</option>
+                                <option value="30d" selected>Последние 30 дней</option>
+                                <option value="90d">Последние 90 дней</option>
+                                <option value="custom">Произвольный период</option>
+                            </select>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-download"></i> Экспорт
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="exportAnalyticsData('pdf')">PDF</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="exportAnalyticsData('excel')">Excel</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="exportAnalyticsData('csv')">CSV</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сводная информация -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="card-subtitle text-muted mb-1">Всего просмотров</h6>
+                                    <h2 class="card-title" id="total-views">-</h2>
+                                    <p class="card-text text-success">
+                                        <i class="bi bi-arrow-up"></i> 12% с прошлого периода
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="card-subtitle text-muted mb-1">Активные действия</h6>
+                                    <h2 class="card-title" id="total-actions">-</h2>
+                                    <p class="card-text text-success">
+                                        <i class="bi bi-arrow-up"></i> 8% с прошлого периода
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="card-subtitle text-muted mb-1">Конверсия</h6>
+                                    <h2 class="card-title" id="conversion-rate">-</h2>
+                                    <p class="card-text text-danger">
+                                        <i class="bi bi-arrow-down"></i> 2% с прошлого периода
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="card-subtitle text-muted mb-1">Среднее время</h6>
+                                    <h2 class="card-title" id="avg-time">-</h2>
+                                    <p class="card-text text-success">
+                                        <i class="bi bi-arrow-up"></i> 15% с прошлого периода
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Графики -->
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <!-- График посещаемости -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Посещаемость профиля</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 300px;">
+                                        <canvas id="visitors-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- График конверсий -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Динамика конверсии</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 200px;">
+                                        <canvas id="conversion-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- График популярных услуг -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Популярные услуги</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 220px;">
+                                        <canvas id="services-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- График источников трафика -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Источники трафика</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 220px;">
+                                        <canvas id="sources-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="list-container" id="list">
+                <!-- Список (категории, меню) -->
+                <div class="list-header">
+                    <h3>Разделы аналитики</h3>
+                </div>
+                <div class="list-items">
+                    <div class="list-item active" data-section="overview">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Обзор</span>
+                    </div>
+                    <div class="list-item" data-section="visitors">
+                        <i class="bi bi-people"></i>
+                        <span>Посетители</span>
+                    </div>
+                    <div class="list-item" data-section="services">
+                        <i class="bi bi-bag"></i>
+                        <span>Услуги</span>
+                    </div>
+                    <div class="list-item" data-section="conversion">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span>Конверсия</span>
+                    </div>
+                    <div class="list-item" data-section="geography">
+                        <i class="bi bi-geo-alt"></i>
+                        <span>География</span>
+                    </div>
+                    <div class="list-item" data-section="sources">
+                        <i class="bi bi-signpost-split"></i>
+                        <span>Источники</span>
+                    </div>
+                    <div class="list-item" data-section="reports">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Отчеты</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-container" id="info">
+                <!-- Информационная панель (детали) -->
+                <div class="info-header">
+                    <h3>Детальная информация</h3>
+                </div>
+                
+                <div class="info-content p-3">
+                    <!-- Выбранная метрика -->
+                    <div class="metric-details">
+                        <h4>Посещаемость профиля</h4>
+                        
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Выберите показатель из списка слева для просмотра детальной информации.
+                        </div>
+                        
+                        <div class="metric-summary">
+                            <h5>Сводка за последний месяц</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Всего просмотров
+                                    <span class="badge bg-primary rounded-pill">1,245</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Уникальные посетители
+                                    <span class="badge bg-primary rounded-pill">873</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Среднее время на странице
+                                    <span class="badge bg-primary rounded-pill">4:32</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Действия с профилем
+                                    <span class="badge bg-primary rounded-pill">356</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="metric-recommendations mt-4">
+                            <h5>Рекомендации</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Как увеличить просмотры профиля</h6>
+                                    <ul class="mb-0">
+                                        <li>Добавьте больше фотографий вашего бизнеса</li>
+                                        <li>Обновите описание услуг</li>
+                                        <li>Настройте часы работы в праздничные дни</li>
+                                        <li>Добавьте специальные предложения</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white py-3 mt-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="m-0">&copy; <span class="current-year">2023</span> Qwerty.town. Все права защищены.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-white me-3">Пользовательское соглашение</a>
+                    <a href="#" class="text-white">Политика конфиденциальности</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', path='/js/main.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/business-analytics.js') }}"></script>
+</body>
+</html> 

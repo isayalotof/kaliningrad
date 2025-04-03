@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/business-dashboard.css') }}">
+</head>
+<body>
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="fs-3 m-0">
+                        <a href="/" class="text-white text-decoration-none">
+                            <img src="{{ url_for('static', path='/img/logo.png') }}" alt="Qwerty.town" height="40" class="me-2">
+                            Qwerty.town
+                        </a>
+                    </h1>
+                    <p class="m-0">Бизнес-модуль для управления компанией</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="dropdown d-inline-block">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="businessDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-building me-1"></i>
+                            <span class="company-name">{{ company_id }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="businessDropdown">
+                            <li><a class="dropdown-item" href="/business/dashboard/{{ company_id }}">Панель управления</a></li>
+                            <li><a class="dropdown-item" href="/business/profile/{{ company_id }}">Профиль компании</a></li>
+                            <li><a class="dropdown-item" href="/business/schedule/{{ company_id }}">Расписание</a></li>
+                            <li><a class="dropdown-item" href="/business/bookings/{{ company_id }}">Бронирования</a></li>
+                            <li><a class="dropdown-item" href="/business/analytics/{{ company_id }}">Аналитика</a></li>
+                            <li><a class="dropdown-item active" href="/business/telegram/{{ company_id }}">Telegram</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/">Главная страница</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown d-inline-block ms-2">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span class="user-name">Пользователь</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/profile">Мой профиль</a></li>
+                            <li><a class="dropdown-item" href="/settings">Настройки</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item logout-btn" href="#">Выйти</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Боковое меню -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/business/dashboard/{{ company_id }}">
+                                <i class="bi bi-speedometer2 me-2"></i>
+                                Панель управления
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/business/profile/{{ company_id }}">
+                                <i class="bi bi-building me-2"></i>
+                                Профиль компании
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/business/schedule/{{ company_id }}">
+                                <i class="bi bi-calendar-check me-2"></i>
+                                Расписание
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/business/bookings/{{ company_id }}">
+                                <i class="bi bi-bookmark-check me-2"></i>
+                                Бронирования
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/business/analytics/{{ company_id }}">
+                                <i class="bi bi-graph-up me-2"></i>
+                                Аналитика
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/business/telegram/{{ company_id }}">
+                                <i class="bi bi-telegram me-2"></i>
+                                Telegram Бот
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Основной контент -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Интеграция с Telegram</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <a href="https://t.me/KarlQwertyTownBot" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-telegram"></i> Открыть Telegram бота
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-telegram text-primary me-2"></i>
+                                    Нейроассистент «Карл»
+                                </h5>
+                                <p class="card-text">Нейроассистент «Карл» - это интеллектуальный бот для Telegram, который помогает вашим клиентам находить информацию о вашем бизнесе, делать бронирования и задавать вопросы.</p>
+                                
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="status-indicator connected me-2"></div>
+                                    <span class="connection-status">Статус подключения: <strong class="text-success">Подключено</strong></span>
+                                </div>
+                                
+                                <a href="https://t.me/KarlQwertyTownBot" target="_blank" class="btn btn-primary mb-3">
+                                    <i class="bi bi-telegram"></i> Открыть в Telegram
+                                </a>
+                                
+                                <div class="telegram-preview mt-3">
+                                    <div class="telegram-chat-header">
+                                        <img src="{{ url_for('static', path='/img/karl-bot-avatar.png') }}" alt="Карл" class="telegram-avatar">
+                                        <div class="telegram-chat-info">
+                                            <div class="telegram-chat-name">Карл - Qwerty.town</div>
+                                            <div class="telegram-chat-status">онлайн</div>
+                                        </div>
+                                    </div>
+                                    <div class="telegram-chat-body">
+                                        <div class="message-received">
+                                            Привет! Я Карл, ассистент Qwerty.town. Я могу помочь вашим клиентам найти информацию о вашем бизнесе и записаться на услуги.
+                                        </div>
+                                        <div class="message-received">
+                                            Что вы хотите настроить сегодня?
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-gear text-primary me-2"></i>
+                                    Настройки бота
+                                </h5>
+                                
+                                <form id="telegram-settings-form">
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="enable_bot" checked>
+                                        <label class="form-check-label" for="enable_bot">Включить бота для моего бизнеса</label>
+                                    </div>
+                                    
+                                    <h6 class="mb-3">Уведомления для бизнеса</h6>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="notify_new_booking" checked>
+                                        <label class="form-check-label" for="notify_new_booking">Уведомлять о новых бронированиях</label>
+                                    </div>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="notify_cancelled_booking" checked>
+                                        <label class="form-check-label" for="notify_cancelled_booking">Уведомлять об отмене бронирований</label>
+                                    </div>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="notify_questions" checked>
+                                        <label class="form-check-label" for="notify_questions">Уведомлять о вопросах от клиентов</label>
+                                    </div>
+                                    
+                                    <h6 class="mb-3">Информация из профиля для бота</h6>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="show_address" checked>
+                                        <label class="form-check-label" for="show_address">Показывать адрес</label>
+                                    </div>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="show_services" checked>
+                                        <label class="form-check-label" for="show_services">Показывать услуги</label>
+                                    </div>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="show_working_hours" checked>
+                                        <label class="form-check-label" for="show_working_hours">Показывать часы работы</label>
+                                    </div>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="enable_booking" checked>
+                                        <label class="form-check-label" for="enable_booking">Разрешить бронирование через бота</label>
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Сохранить настройки</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-chat-dots text-primary me-2"></i>
+                                    Тестирование бота
+                                </h5>
+                                <p class="card-text">Протестируйте, как бот будет отвечать на вопросы ваших клиентов. Введите вопрос и получите ответ, который увидят клиенты.</p>
+                                
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="test-question" placeholder="Введите вопрос, например: Какие услуги вы предлагаете?">
+                                    <button class="btn btn-primary" type="button" id="test-bot-btn">Отправить</button>
+                                </div>
+                                
+                                <div class="bot-response p-3 bg-light rounded" style="display: none;">
+                                    <h6 class="mb-2">Ответ бота:</h6>
+                                    <div id="bot-answer" class="bot-answer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="m-0">&copy; <span class="current-year">2023</span> Qwerty.town. Все права защищены.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-white me-3">Пользовательское соглашение</a>
+                    <a href="#" class="text-white">Политика конфиденциальности</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', path='/js/main.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/auth.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Обработчик тестирования бота
+            const testBotBtn = document.getElementById('test-bot-btn');
+            const testQuestion = document.getElementById('test-question');
+            const botResponse = document.querySelector('.bot-response');
+            const botAnswer = document.getElementById('bot-answer');
+            
+            if (testBotBtn && testQuestion && botResponse && botAnswer) {
+                testBotBtn.addEventListener('click', function() {
+                    const question = testQuestion.value.trim();
+                    if (!question) return;
+                    
+                    // Показываем индикатор загрузки
+                    botAnswer.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"><span class="visually-hidden">Загрузка...</span></div> Генерирую ответ...';
+                    botResponse.style.display = 'block';
+                    
+                    // Имитация запроса к API (в реальном приложении здесь был бы запрос к API)
+                    setTimeout(() => {
+                        // Примеры ответов для разных вопросов
+                        let answer = '';
+                        const lowerQuestion = question.toLowerCase();
+                        
+                        if (lowerQuestion.includes('услуги') || lowerQuestion.includes('сервис')) {
+                            answer = `Компания предлагает следующие услуги:<br>
+                                    - Консультация: 1000₽, 30 минут<br>
+                                    - Базовая услуга: 3000₽, 60 минут<br>
+                                    - Премиум сервис: 5000₽, 90 минут<br><br>
+                                    Вы можете забронировать любую из этих услуг, отправив команду /booking`;
+                        } else if (lowerQuestion.includes('адрес') || lowerQuestion.includes('где')) {
+                            answer = `Адрес компании: Москва, ул. Ленина, д. 10<br>
+                                    <a href="#">Посмотреть на карте</a>`;
+                        } else if (lowerQuestion.includes('время') || lowerQuestion.includes('работа') || lowerQuestion.includes('часы')) {
+                            answer = `Часы работы компании:<br>
+                                    Пн-Пт: 09:00 - 18:00<br>
+                                    Сб: 10:00 - 16:00<br>
+                                    Вс: выходной`;
+                        } else if (lowerQuestion.includes('забронировать') || lowerQuestion.includes('запись') || lowerQuestion.includes('записаться')) {
+                            answer = `Для бронирования услуги, пожалуйста, используйте команду /booking или нажмите на кнопку ниже.<br>
+                                    <button class="btn btn-sm btn-primary mt-2">Забронировать</button>`;
+                        } else {
+                            answer = `Я помогаю клиентам узнать больше о компании "${document.querySelector('.company-name').textContent}". Вы можете спросить меня о предоставляемых услугах, часах работы, адресе или возможности бронирования. Также доступны следующие команды:<br>
+                                    /services - список услуг<br>
+                                    /hours - часы работы<br>
+                                    /address - адрес<br>
+                                    /booking - забронировать услугу`;
+                        }
+                        
+                        botAnswer.innerHTML = answer;
+                    }, 1000);
+                });
+                
+                // Отправка формы настроек
+                const settingsForm = document.getElementById('telegram-settings-form');
+                if (settingsForm) {
+                    settingsForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        // Показываем уведомление об успешном сохранении
+                        const alert = document.createElement('div');
+                        alert.className = 'alert alert-success mt-3';
+                        alert.innerHTML = '<i class="bi bi-check-circle-fill"></i> Настройки успешно сохранены';
+                        
+                        settingsForm.appendChild(alert);
+                        
+                        // Удаляем уведомление через 3 секунды
+                        setTimeout(() => {
+                            alert.remove();
+                        }, 3000);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

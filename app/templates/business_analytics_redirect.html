@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/main.css') }}">
+    <script>
+        // Функция для перенаправления на страницу аналитики компании
+        function redirectToCompanyAnalytics() {
+            // Получаем токен авторизации
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                // Если токен отсутствует, перенаправляем на страницу входа
+                window.location.href = '/login?redirect=/business/analytics';
+                return;
+            }
+
+            // Получаем данные о текущем пользователе из API
+            fetch('/api/auth/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка авторизации');
+                }
+                return response.json();
+            })
+            .then(userData => {
+                // Получаем данные о компаниях пользователя
+                return fetch('/api/companies', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка получения данных о компаниях');
+                }
+                return response.json();
+            })
+            .then(companiesData => {
+                if (companiesData.items && companiesData.items.length > 0) {
+                    // Перенаправляем на страницу аналитики первой компании
+                    window.location.href = `/business/analytics/${companiesData.items[0].id}`;
+                } else {
+                    // Если у пользователя нет компаний, перенаправляем на страницу регистрации
+                    window.location.href = '/business/module';
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                // В случае ошибки показываем сообщение и перенаправляем на главную страницу
+                document.getElementById('error-message').textContent = 'Произошла ошибка при получении данных. Пожалуйста, войдите в аккаунт снова.';
+                document.getElementById('error-container').classList.remove('d-none');
+                
+                // Удаляем токен, так как он может быть недействительным
+                localStorage.removeItem('auth_token');
+                
+                // Через 3 секунды перенаправляем на страницу входа
+                setTimeout(() => {
+                    window.location.href = '/login?redirect=/business/analytics';
+                }, 3000);
+            });
+        }
+
+        // Вызываем функцию перенаправления при загрузке страницы
+        document.addEventListener('DOMContentLoaded', redirectToCompanyAnalytics);
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3>Перенаправление на страницу аналитики...</h3>
+                        <div class="spinner-border text-primary mt-3" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                        </div>
+                        <div id="error-container" class="alert alert-danger mt-3 d-none">
+                            <p id="error-message"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

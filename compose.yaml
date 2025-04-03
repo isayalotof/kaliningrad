@@ -1,0 +1,57 @@
+name: qwertytown
+
+services:
+  app:
+    build: .
+    container_name: qwertytown_app
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/qwertytown
+      - SECRET_KEY=your_secret_key_here
+      - ENVIRONMENT=development
+    depends_on:
+      - db
+    networks:
+      - qwertytown_network
+  
+  db:
+    image: postgres:15
+    container_name: qwertytown_db
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=qwertytown
+    networks:
+      - qwertytown_network
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: qwertytown_rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - qwertytown_network
+
+networks:
+  qwertytown_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  rabbitmq_data: 

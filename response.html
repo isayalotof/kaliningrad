@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация бизнеса - Qwerty.town</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="http://localhost:8080/static/css/main.css">
+    <link rel="stylesheet" href="http://localhost:8080/static/css/business-module.css">
+</head>
+<body>
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="fs-3 m-0">
+                        <img src="http://localhost:8080/static/img/logo.png" alt="Qwerty.town" height="40" class="me-2">
+                        Qwerty.town
+                    </h1>
+                    <p class="m-0">Бизнес-модуль для регистрации и управления</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="btn btn-sm btn-light">О нас</a>
+                    <a href="#" class="btn btn-sm btn-light">Контакты</a>
+                    <a href="#" class="btn btn-sm btn-outline-light">
+                        <i class="bi bi-telegram"></i> Открыть в Telegram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container-fluid p-0">
+        <div class="notification-container"></div>
+        
+        <div class="situation-center">
+            <form id="business-registration-form" method="post" enctype="multipart/form-data" action="/business/api/register">
+                <!-- Ситуационный центр с тремя панелями -->
+                <div class="scene-container" id="scene">
+                    <!-- Основной контент (карта, медиа) -->
+                    <div id="scene-content">
+                        <!-- Визуальное представление данных -->
+                        <div class="registration-preview">
+                            <div class="preview-placeholder">
+                                <i class="bi bi-shop display-1"></i>
+                                <h3>Предпросмотр профиля</h3>
+                                <p>Здесь будет отображаться предварительный просмотр вашего профиля</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="list-container" id="list">
+                    <!-- Список (категории, меню) -->
+                    <div class="list-header">
+                        <h3>Разделы регистрации</h3>
+                    </div>
+                    <div class="list-items">
+                        <div class="list-item active" data-step="business-type">
+                            <i class="bi bi-building"></i>
+                            <span>Тип бизнеса</span>
+                        </div>
+                        <div class="list-item" data-step="contact-info">
+                            <i class="bi bi-person-vcard"></i>
+                            <span>Контактные данные</span>
+                        </div>
+                        <div class="list-item" data-step="location">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>Адрес и локация</span>
+                        </div>
+                        <div class="list-item" data-step="working-hours">
+                            <i class="bi bi-clock"></i>
+                            <span>Время работы</span>
+                        </div>
+                        <div class="list-item" data-step="services">
+                            <i class="bi bi-bag"></i>
+                            <span>Услуги и товары</span>
+                        </div>
+                        <div class="list-item" data-step="media">
+                            <i class="bi bi-images"></i>
+                            <span>Фото и медиа</span>
+                        </div>
+                        <div class="list-item" data-step="finish">
+                            <i class="bi bi-check-circle"></i>
+                            <span>Завершение</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-container" id="info">
+                    <!-- Информационная панель (формы, детали) -->
+                    <div class="info-header">
+                        <h3>Настройка профиля</h3>
+                        <div class="progress w-100 mt-2">
+                            <div class="progress-bar" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">15%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-content">
+                        <!-- Здесь будут отображаться формы для заполнения данных -->
+                        <div class="form-step" id="business-type-form">
+                            <h4>Выберите тип вашего бизнеса</h4>
+                            <p>Это поможет нам настроить форму регистрации под ваши потребности</p>
+                            
+                            <div class="row g-3 mt-3">
+                                <div class="col-md-4">
+                                    <div class="business-type-card" data-type="restaurant">
+                                        <i class="bi bi-cup-hot"></i>
+                                        <h5>Ресторан / Кафе</h5>
+                                        <input type="radio" name="business_type" value="restaurant" class="visually-hidden">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="business-type-card" data-type="beauty">
+                                        <i class="bi bi-scissors"></i>
+                                        <h5>Салон красоты</h5>
+                                        <input type="radio" name="business_type" value="beauty" class="visually-hidden">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="business-type-card" data-type="shop">
+                                        <i class="bi bi-shop"></i>
+                                        <h5>Магазин</h5>
+                                        <input type="radio" name="business_type" value="shop" class="visually-hidden">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="business-type-card" data-type="fitness">
+                                        <i class="bi bi-heart-pulse"></i>
+                                        <h5>Фитнес / Спорт</h5>
+                                        <input type="radio" name="business_type" value="fitness" class="visually-hidden">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="business-type-card" data-type="medical">
+                                        <i class="bi bi-hospital"></i>
+                                        <h5>Медицинский центр</h5>
+                                        <input type="radio" name="business_type" value="medical" class="visually-hidden">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="business-type-card" data-type="other">
+                                        <i class="bi bi-plus-circle"></i>
+                                        <h5>Другое</h5>
+                                        <input type="radio" name="business_type" value="other" class="visually-hidden">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 text-end">
+                                <button type="button" class="btn btn-primary next-step" data-next="contact-info">Далее</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Контактная информация -->
+                        <div class="form-step" id="contact-info-form" style="display: none;">
+                            <h4>Контактная информация</h4>
+                            <p>Укажите основную информацию о вашем бизнесе</p>
+                            
+                            <div class="mb-3">
+                                <label for="business-name" class="form-label">Название бизнеса</label>
+                                <input type="text" class="form-control" id="business-name" name="name" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="business-description" class="form-label">Описание</label>
+                                <textarea class="form-control" id="business-description" name="description" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="business-phone" class="form-label">Телефон</label>
+                                <input type="tel" class="form-control" id="business-phone" name="phone">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="business-email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="business-email" name="email">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="business-website" class="form-label">Веб-сайт</label>
+                                <input type="url" class="form-control" id="business-website" name="website" placeholder="https://example.com">
+                            </div>
+                            
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary prev-step" data-prev="business-type">Назад</button>
+                                <button type="button" class="btn btn-primary next-step" data-next="location">Далее</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Добавляем форму адреса и локации после блока контактной информации -->
+                        <div class="form-step" id="location-form" style="display: none;">
+                            <h4>Адрес и локация</h4>
+                            <p>Укажите адрес и местоположение вашего бизнеса</p>
+                            
+                            <div class="mb-3">
+                                <label for="location-city" class="form-label">Город</label>
+                                <input type="text" class="form-control" id="location-city" name="location_city">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="location-street" class="form-label">Улица</label>
+                                <input type="text" class="form-control" id="location-street" name="location_street">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="location-building" class="form-label">Дом/строение</label>
+                                    <input type="text" class="form-control" id="location-building" name="location_building">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="location-floor" class="form-label">Этаж</label>
+                                    <input type="text" class="form-control" id="location-floor" name="location_floor">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="location-office" class="form-label">Офис/помещение</label>
+                                    <input type="text" class="form-control" id="location-office" name="location_office">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="location-additional-info" class="form-label">Дополнительная информация</label>
+                                <textarea class="form-control" id="location-additional-info" name="location_additional_info" rows="2" placeholder="Например: вход со двора, код на двери и т.д."></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div id="location-map" style="height: 300px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                                    <div class="text-center">
+                                        <i class="bi bi-geo-alt display-4 text-muted"></i>
+                                        <p>Карта будет загружена после указания адреса</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary prev-step" data-prev="contact-info">Назад</button>
+                                <button type="button" class="btn btn-primary next-step" data-next="working-hours">Далее</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Добавляем форму времени работы -->
+                        <div class="form-step" id="working-hours-form" style="display: none;">
+                            <h4>Время работы</h4>
+                            <p>Укажите часы работы вашего бизнеса</p>
+                            
+                            <div class="mb-3">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="schedule-type" id="schedule-type-everyday" value="everyday" checked>
+                                    <label class="form-check-label" for="schedule-type-everyday">Одинаковое расписание на каждый день</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="schedule-type" id="schedule-type-individual" value="individual">
+                                    <label class="form-check-label" for="schedule-type-individual">Индивидуальное расписание по дням</label>
+                                </div>
+                            </div>
+                            
+                            <div id="everyday-schedule">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="everyday-open-time" class="form-label">Время открытия</label>
+                                        <input type="time" class="form-control" id="everyday-open-time" value="09:00">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="everyday-close-time" class="form-label">Время закрытия</label>
+                                        <input type="time" class="form-control" id="everyday-close-time" value="18:00">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="weekday-schedule" style="display: none;">
+                                <!-- Понедельник -->
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input working-day-toggle" type="checkbox" id="monday-is-open" data-day="monday" checked>
+                                                    <label class="form-check-label" for="monday-is-open">Понедельник</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row" id="hours_monday">
+                                                    <div class="col-md-5">
+                                                        <input type="time" class="form-control" id="monday-open-time" value="09:00">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <input type="time" class="form-control" id="monday-close-time" value="18:00">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm" data-day="monday">
+                                                            <i class="bi bi-files"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Аналогично для остальных дней недели -->
+                                <!-- Для экономии места, показан только понедельник, но аналогичные блоки должны быть для каждого дня недели -->
+                            </div>
+                            
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary prev-step" data-prev="location">Назад</button>
+                                <button type="button" class="btn btn-primary next-step" data-next="services">Далее</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Добавляем форму услуг и товаров -->
+                        <div class="form-step" id="services-form" style="display: none;">
+                            <h4>Услуги и товары</h4>
+                            <p>Добавьте услуги или товары, которые вы предлагаете</p>
+                            
+                            <div class="mb-3">
+                                <div id="services-container">
+                                    <!-- Здесь будут отображаться добавленные услуги -->
+                                </div>
+                                
+                                <div class="mt-2">
+                                    <button type="button" class="btn btn-outline-primary" id="add-service-btn">
+                                        <i class="bi bi-plus-circle"></i> Добавить услугу
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary prev-step" data-prev="working-hours">Назад</button>
+                                <button type="button" class="btn btn-primary next-step" data-next="media">Далее</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Добавляем форму медиа файлов -->
+                        <div class="form-step" id="media-form" style="display: none;">
+                            <h4>Фото и медиа</h4>
+                            <p>Загрузите логотип и фотографии вашего бизнеса</p>
+                            
+                            <div class="mb-3">
+                                <label for="logo-upload" class="form-label">Логотип</label>
+                                <input class="form-control" type="file" id="logo-upload" name="logo" accept="image/*">
+                                <div id="logo-preview" class="mt-2"></div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="photos-upload" class="form-label">Фотографии (до 5 фото)</label>
+                                <input class="form-control" type="file" id="photos-upload" name="photos" accept="image/*" multiple>
+                                <div id="photos-preview" class="row mt-2"></div>
+                            </div>
+                            
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary prev-step" data-prev="services">Назад</button>
+                                <button type="button" class="btn btn-primary next-step" data-next="finish">Далее</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Добавляем форму завершения регистрации -->
+                        <div class="form-step" id="finish-form" style="display: none;">
+                            <h4>Завершение регистрации</h4>
+                            <p>Проверьте введенные данные и завершите регистрацию</p>
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i>
+                                После завершения регистрации вы сможете отредактировать все данные в личном кабинете.
+                            </div>
+                            
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Выбранный тарифный план</h5>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="card mb-3 border-primary" style="max-width: 18rem;">
+                                            <div class="card-header bg-primary text-white">Базовый</div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">Бесплатно</h5>
+                                                <p class="card-text">Базовый функционал для вашего бизнеса</p>
+                                                <ul class="list-unstyled">
+                                                    <li><i class="bi bi-check-circle text-success"></i> Профиль бизнеса</li>
+                                                    <li><i class="bi bi-check-circle text-success"></i> До 5 услуг</li>
+                                                    <li><i class="bi bi-check-circle text-success"></i> Базовая аналитика</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary prev-step" data-prev="media">Назад</button>
+                                <button type="button" class="btn btn-success" id="complete-registration">Завершить регистрацию</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white py-3 mt-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="m-0">&copy; <span class="current-year">2023</span> Qwerty.town. Все права защищены.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-white me-3">Пользовательское соглашение</a>
+                    <a href="#" class="text-white">Политика конфиденциальности</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="http://localhost:8080/static/js/main.js"></script>
+    <script src="http://localhost:8080/static/js/business-module.js"></script>
+</body>
+</html> 

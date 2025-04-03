@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Qwerty.town</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/business-module.css') }}">
+</head>
+<body>
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="fs-3 m-0">
+                        <img src="{{ url_for('static', path='/img/logo.png') }}" alt="Qwerty.town" height="40" class="me-2">
+                        <a href="/" class="text-white text-decoration-none">Qwerty.town</a>
+                    </h1>
+                    <p class="m-0">Личный кабинет бизнеса</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="btn btn-sm btn-light">Мой профиль</a>
+                    <a href="#" class="btn btn-sm btn-light">Уведомления <span class="badge bg-danger">3</span></a>
+                    <a href="#" class="btn btn-sm btn-outline-light">Выйти</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-4">
+        <div class="row">
+            <!-- Боковое меню -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Меню</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="/business/dashboard" class="list-group-item list-group-item-action active">
+                            <i class="bi bi-speedometer2 me-2"></i> Обзор
+                        </a>
+                        <a href="/business/profile/edit" class="list-group-item list-group-item-action">
+                            <i class="bi bi-building me-2"></i> Профиль компании
+                        </a>
+                        <a href="/business/analytics" class="list-group-item list-group-item-action">
+                            <i class="bi bi-graph-up me-2"></i> Аналитика
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-calendar-check me-2"></i> Расписание
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-bookmark-check me-2"></i> Бронирования
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-people me-2"></i> Клиенты
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-bag me-2"></i> Услуги и товары
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-gear me-2"></i> Настройки
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Текущий тариф</h5>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">Стандарт</h4>
+                        <p class="card-text">Действует до: <strong>01.05.2025</strong></p>
+                        <div class="progress mb-2">
+                            <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                        </div>
+                        <small class="text-muted">Использовано 75% возможностей тарифа</small>
+                        <hr>
+                        <a href="#" class="btn btn-outline-primary btn-sm d-block">Сменить тариф</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Основной контент -->
+            <div class="col-md-9">
+                <!-- Приветствие -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h2 class="card-title">Добро пожаловать, Компания!</h2>
+                                <p class="card-text">Сегодня {{ now.strftime('%d.%m.%Y') }}. У вас 3 новых уведомления.</p>
+                            </div>
+                            <div class="ms-auto">
+                                <button class="btn btn-outline-primary">
+                                    <i class="bi bi-people-fill me-1"></i> Пригласить сотрудников
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Статистика -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-eye display-4 text-primary mb-2"></i>
+                                <h5 class="card-title">142</h5>
+                                <p class="card-text">Просмотров профиля за сегодня</p>
+                                <a href="/business/analytics" class="btn btn-sm btn-outline-secondary">Детали</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calendar-check display-4 text-success mb-2"></i>
+                                <h5 class="card-title">12</h5>
+                                <p class="card-text">Бронирований на сегодня</p>
+                                <a href="#" class="btn btn-sm btn-outline-secondary">Управление</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-star display-4 text-warning mb-2"></i>
+                                <h5 class="card-title">4.8</h5>
+                                <p class="card-text">Средний рейтинг (48 отзывов)</p>
+                                <a href="#" class="btn btn-sm btn-outline-secondary">Смотреть отзывы</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Последние активности -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Последние активности</h5>
+                        <button class="btn btn-sm btn-outline-secondary">Все активности</button>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="mb-1"><i class="bi bi-calendar-check text-success me-2"></i> <strong>Новое бронирование</strong> на услугу "Консультация"</p>
+                                    <small class="text-muted">Клиент: Иван Иванов, 14:00, 10.04.2025</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-success">Новое</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="mb-1"><i class="bi bi-star-fill text-warning me-2"></i> <strong>Новый отзыв</strong> с оценкой 5 звезд</p>
+                                    <small class="text-muted">Клиент: Мария Петрова, 09.04.2025</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-success">Новое</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="mb-1"><i class="bi bi-chat-left-text text-primary me-2"></i> <strong>Новое сообщение</strong> от клиента</p>
+                                    <small class="text-muted">Клиент: Алексей Сидоров, 08.04.2025</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-success">Новое</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="mb-1"><i class="bi bi-calendar-x text-danger me-2"></i> <strong>Отмена бронирования</strong> на услугу "Консультация"</p>
+                                    <small class="text-muted">Клиент: Ольга Кузнецова, 07.04.2025</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-secondary">Обработано</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Задачи -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Задачи на сегодня</h5>
+                        <button class="btn btn-sm btn-outline-primary">Добавить задачу</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="task1">
+                            <label class="form-check-label" for="task1">
+                                Обновить фотографии в профиле
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="task2" checked>
+                            <label class="form-check-label text-decoration-line-through" for="task2">
+                                Ответить на новые отзывы
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="task3">
+                            <label class="form-check-label" for="task3">
+                                Обновить график работы на праздники
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="task4">
+                            <label class="form-check-label" for="task4">
+                                Добавить новую услугу в каталог
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white py-3 mt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="m-0">&copy; <span class="current-year">2023</span> Qwerty.town. Все права защищены.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-white me-3">Пользовательское соглашение</a>
+                    <a href="#" class="text-white">Политика конфиденциальности</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', path='/js/main.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/business-dashboard.js') }}"></script>
+</body>
+</html> 
