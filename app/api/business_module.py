@@ -10,6 +10,7 @@ import logging
 from pydantic import ValidationError
 from datetime import datetime, timedelta
 import re
+from fastapi.staticfiles import StaticFiles
 
 from app.core.database import get_db
 from app.schemas.company import CompanyCreate, CompanyResponse, CompanyBase
@@ -26,6 +27,7 @@ from app.models.service import Service
 from app.models.media import Media
 from app.models.working_hours import WorkingHours
 from app.services.form_template import FormTemplateService
+from app.utils.ai_utils import FusionBrainAPI
 
 # Настройка логгера
 logger = logging.getLogger(__name__)
@@ -584,4 +586,60 @@ async def register_business_api(
         user=None,  # Используем owner_id вместо user
         db=db,
         owner_id=owner_id
-    ) 
+    )
+
+# API для генерации логотипа с помощью AI
+@router.post("/api/generate-logo")
+async def generate_logo_api(
+    request: Request,
+    description: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    """
+    Генерация логотипа с помощью AI на основе описания бизнеса
+    """
+    try:
+        logger.info(f"Запрос на генерацию логотипа с описанием: {description}")
+        
+        # Создаем экземпляр класса для работы с API
+        fusion_brain = FusionBrainAPI()
+        
+        # Создаем промпт на основе описания
+        prompt = fusion_brain.create_logo_prompt(description)
+        logger.info(f"Сформирован промпт для генерации логотипа: {prompt}")
+        
+        # Генерируем изображение
+        logo_path = await fusion_brain.generate_image(
+            prompt=prompt,
+            width=512,  # Используем квадратные размеры для логотипа
+            height=512
+        )
+        
+        if not logo_path:
+            logger.error("Не удалось сгенерировать логотип")
+            return JSONResponse(
+                status_code=status.HTTP_200_OK,
+                content={
+                    "success": False,
+                    "error": "Не удалось сгенерировать логотип. Пожалуйста, попробуйте позже или загрузите свой логотип."
+                }
+            )
+        
+        # Возвращаем путь к сгенерированному логотипу
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "success": True,
+                "logo_path": f"/static/{logo_path}"
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Ошибка при генерации логотипа: {str(e)}")
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "success": False,
+                "error": f"Произошла ошибка при генерации: {str(e)}. Пожалуйста, загрузите свой логотип."
+            }
+        ) 
